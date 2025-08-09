@@ -1,0 +1,34 @@
+services:
+  db:
+    image: postgres:15
+    container_name: supplier_auth_db
+    restart: always
+    environment:
+      POSTGRES_USER: authuser
+      POSTGRES_PASSWORD: authpass
+      POSTGRES_DB: authdb
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - authnet
+
+  devcontainer:
+      build:
+        context: .
+        dockerfile: .devcontainer/Dockerfile
+      volumes:
+        - .:/workspaces/supplier-delivery-auth-microservices
+      tty: true
+      networks:
+        - authnet
+      ports:
+        - "8080:8080"
+
+volumes:
+  db_data:
+
+networks:
+  authnet:
+    driver: bridge
