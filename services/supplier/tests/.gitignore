@@ -1,0 +1,40 @@
+# Build results
+bin/
+obj/
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Visual Studio Code
+.vscode/
+
+# Dotnet environment files
+*.vspscc
+*.vssscc
+
+# NuGet packages
+*.nupkg
+packages/
+.nuget/
+
+# Logs
+*.log
+
+# Secrets
+appsettings.*.Secrets.json
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Test results
+TestResults/
+*.coverage
+*.coveragexml
+
+# Others
+.idea/
+*.swp
