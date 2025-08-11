@@ -89,3 +89,9 @@ Você pode executar o projeto em um ambiente de desenvolvimento isolado usando D
 8. Após o ambiente estar pronto, utilize o terminal integrado para rodar comandos dotnet, python ou docker conforme necessário.
 
 > **Observação:** O arquivo `devcontainer.json` e o Dockerfile acima são exemplos básicos e podem ser ajustados conforme as necessidades do seu projeto.
+
+/**
+ * Esta API possui documentação Swagger gerada automaticamente.
+ * Para acessar a documentação Swagger de cada microserviço, adicione o pós-fixo `/swagger` à URL do microserviço correspondente.
+ * Exemplo: `http://<host>:<porta>/swagger`
+ */
