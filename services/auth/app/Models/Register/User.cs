@@ -1,4 +1,4 @@
-namespace app.Models;
+namespace app.Models.Register;
 
 public class User
 {

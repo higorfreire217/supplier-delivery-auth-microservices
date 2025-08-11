@@ -1,5 +1,7 @@
 using app.Models;
 using app.Models.Register;
+using app.Models.Login;
+using app.Helpers;
 using app.Services;
 using app.Validators;
 using FluentValidation;
@@ -14,6 +16,9 @@ builder.Services.AddSwaggerGen();
 
 // Add Controllers to the container.
 builder.Services.AddControllers();
+
+// Initialize JWT Helper with configuration.
+JwtHelper.Initialize(builder.Configuration);
 
 // Configure the database context based on the environment.
 // Use InMemory database for testing and PostgreSQL for production and development.
@@ -30,9 +35,11 @@ else
 
 // Register the UserService for dependency injection.
 builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<AuthService>();
 
 // Register FluentValidation for the RegisterUserRequest model.
 builder.Services.AddScoped<IValidator<UserRegistrationRequest>, UserRegistrationRequestValidator>();
+builder.Services.AddScoped<IValidator<UserLoginRequest>, UserLoginRequestValidator>();
 
 // Build the application.
 var app = builder.Build();

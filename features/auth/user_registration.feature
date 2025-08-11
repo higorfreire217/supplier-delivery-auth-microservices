@@ -13,7 +13,7 @@ Feature: User Registration
     Given I am on the registration endpoint
     When I submit incomplete user information
     Then my account is not created
-    And I receive an error message describing the missing fields
+    And And I receive an error message describing the missing registration fields
 
   Scenario: Registration with existing email
     Given I am on the registration endpoint

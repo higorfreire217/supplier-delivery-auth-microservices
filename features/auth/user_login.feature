@@ -25,4 +25,4 @@ Feature: User Login
     Given I am on the login endpoint
     When I submit a request missing the email or password
     Then I do not receive a JWT token
-    And I receive an error message describing the missing fields
+    And I receive an error message describing the missing login fields

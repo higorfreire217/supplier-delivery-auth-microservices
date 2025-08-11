@@ -1,4 +1,6 @@
 using Microsoft.EntityFrameworkCore;
+using app.Models.Register;
+using app.Models.Login;
 
 namespace app.Models
 {
@@ -10,5 +12,6 @@ namespace app.Models
         }
 
         public DbSet<User> Users { get; set; }
+        public DbSet<UserSession> UserSessions { get; set; }
     }
 }

@@ -1,7 +1,7 @@
 import requests
 from behave import given, when, then
 
-API_URL = "http://localhost:5104/Auth/register"
+API_URL = "http://localhost:5104/User/register"
 
 @given('I am on the registration endpoint')
 def step_impl(context):
@@ -119,7 +119,7 @@ def step_impl(context):
 def step_impl(context):
     assert context.response.status_code == 200
     data = context.response.json()
-    assert "error" not in data
+    assert "errorMessage" not in data or not data.get("errorMessage")
 
 @then('I receive a confirmation message')
 def step_impl(context):
@@ -131,63 +131,62 @@ def step_impl(context):
     print(context.response.json())
     assert context.response.status_code == 400
 
-@then('I receive an error message describing the missing fields')
+@then('And I receive an error message describing the missing registration fields')
 def step_impl(context):
     data = context.response.json()
     print(data)
-    assert "obrigatório" in data.get("error", "").lower()
+    assert "obrigatório" in data.get("errorMessage", "").lower()
 
 @then('I receive an error message indicating the email is already in use')
 def step_impl(context):
     data = context.response.json()
     print(data)
-    assert "este email já está em uso" in data.get("error", "").lower()
+    assert "este email já está em uso" in data.get("errorMessage", "").lower()
 
 @then('I receive an error message about password strength')
 def step_impl(context):
     data = context.response.json()
     print(data)
-    assert "senha" in data.get("error", "").lower() and "pelo menos 8 caracteres" in data.get("error", "").lower()
+    assert "senha" in data.get("errorMessage", "").lower() and "pelo menos 8 caracteres" in data.get("errorMessage", "").lower()
 
 @then('I receive an error message about email format')
 def step_impl(context):
     data = context.response.json()
     print(data)
-    assert "email" in data.get("error", "").lower() and "pelo menos 8 caracteres" in data.get("error", "").lower()
+    assert "email" in data.get("errorMessage", "").lower() and "pelo menos 8 caracteres" in data.get("errorMessage", "").lower()
 
 @then('I receive an error message indicating the name is too short')
 def step_impl(context):
     data = context.response.json()
     print(data)
-    assert "nome" in data.get("error", "").lower() and "pelo menos 3 caracteres" in data.get("error", "").lower()
+    assert "nome" in data.get("errorMessage", "").lower() and "pelo menos 3 caracteres" in data.get("errorMessage", "").lower()
 
 @then('I receive an error message indicating the name is too long')
 def step_impl(context):
     data = context.response.json()
     print(data)
-    assert "nome" in data.get("error", "").lower() and "no máximo 50 caracteres" in data.get("error", "").lower()
+    assert "nome" in data.get("errorMessage", "").lower() and "no máximo 50 caracteres" in data.get("errorMessage", "").lower()
 
 @then('I receive an error message indicating the email is too short')
 def step_impl(context):
     data = context.response.json()
     print(data)
-    assert "email" in data.get("error", "").lower() and "pelo menos 8 caracteres" in data.get("error", "").lower()
+    assert "email" in data.get("errorMessage", "").lower() and "pelo menos 8 caracteres" in data.get("errorMessage", "").lower()
 
 @then('I receive an error message indicating the email is too long')
 def step_impl(context):
     data = context.response.json()
     print(data)
-    # Se o erro for de email já em uso, adapte:
-    assert "no máximo 100 caracteres" in data.get("error", "").lower() or "este email já está em uso" in data.get("error", "").lower()
+    assert "no máximo 100 caracteres" in data.get("errorMessage", "").lower() or "este email já está em uso" in data.get("errorMessage", "").lower()
 
 @then('I receive an error message indicating the password is too short')
 def step_impl(context):
     data = context.response.json()
     print(data)
-    assert "senha" in data.get("error", "").lower() and "pelo menos 8 caracteres" in data.get("error", "").lower()
+    assert "senha" in data.get("errorMessage", "").lower() and "pelo menos 8 caracteres" in data.get("errorMessage", "").lower()
 
 @then('I receive an error message indicating the password is too long')
 def step_impl(context):
     data = context.response.json()
     print(data)
-    assert "senha" in data.get("error", "").lower() and "no máximo 100 caracteres" in data.get("error", "").lower()
+    assert "senha" in data.get("errorMessage", "").lower() and "no máximo 100 caracteres" in data.get("errorMessage", "").lower()

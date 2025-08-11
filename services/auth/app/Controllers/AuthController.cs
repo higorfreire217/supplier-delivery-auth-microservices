@@ -1,4 +1,5 @@
-using app.Models.Register;
+using app.Models.Login;
+using app.Models.TokenValidation;
 using app.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,31 +9,32 @@ namespace app.Controllers;
 [Route("[controller]")]
 public class AuthController : ControllerBase
 {
-    private readonly UserService _userService;
+    private readonly AuthService _authService;
 
-    public AuthController(UserService userService)
+    public AuthController(AuthService authService)
     {
-        _userService = userService;
+        _authService = authService;
     }
 
-    [HttpPost("register")]
-    public async Task<IActionResult> Register([FromBody] UserRegistrationRequest request)
-    {
-        var user = await _userService.RegisterUserAsync(request);
-        if (user.IsSuccess)
-        {
-            return Ok(new { Message = "User registered successfully." });
-        }
-        return BadRequest(new { Error = user.ErrorMessage ?? "Registration failed." });
-    }
 
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] UserLoginRequest request)
     {
-        var result = await _authService.LoginAsync(request);
+        var result = await _authService.LoginUserAsync(request);
         if (result.IsAuthenticated)
-            return Ok(new UserLoginResponse { JwtToken = result.JwtToken, IsAuthenticated = true });
+            return Ok(result);
         else
-            return Unauthorized(new { Message = "Invalid credentials." });
+            return Unauthorized(result);
+    }
+
+    [HttpPost("validate")]
+    public IActionResult ValidateToken([FromBody] TokenValidationRequest request)
+    {
+        var result = _authService.ValidateJwtToken(request);
+
+        if (result.IsValid)
+            return Ok(result);
+        else
+            return Unauthorized(result);
     }
 }

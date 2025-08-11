@@ -2,3 +2,4 @@ architecture/.structurizr
 architecture/workspace.json
 .devcontainer/
 .vscode/
+.venv/

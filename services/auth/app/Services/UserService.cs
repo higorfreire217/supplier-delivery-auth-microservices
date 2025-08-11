@@ -1,6 +1,6 @@
 using app.Models;
 using app.Models.Register;
-using app.Models.Login;
+using app.Helpers;
 using FluentValidation;
 
 namespace app.Services
@@ -9,13 +9,11 @@ namespace app.Services
     {
         private readonly AppDbContext _context;
         private readonly IValidator<UserRegistrationRequest> _validator;
-        private readonly IValidator<UserLoginRequest> _loginValidator;
 
-        public UserService(AppDbContext context, IValidator<UserRegistrationRequest> validator, IValidator<UserLoginRequest> loginValidator)
+        public UserService(AppDbContext context, IValidator<UserRegistrationRequest> validator)
         {
             _context = context;
             _validator = validator;
-            _loginValidator = loginValidator;
 
         }
 
@@ -45,7 +43,7 @@ namespace app.Services
             {
                 Name = request.Name,
                 Email = request.Email,
-                PasswordHash = request.Password // Ideal: gerar hash
+                PasswordHash = PasswordHasher.Hash(request.Password) // Ideal: gerar hash
             };
 
             _context.Users.Add(user);
@@ -55,52 +53,6 @@ namespace app.Services
             {
                 IsSuccess = true,
                 ErrorMessage = null
-            };
-        }
-
-        public async Task<UserLoginResult> LoginUserAsync(UserLoginRequest request)
-        {
-            var validationResult = await _loginValidator.ValidateAsync(request);
-            if (!validationResult.IsValid)
-            {
-                return new UserLoginResult
-                {
-                    IsAuthenticated = false,
-                    ErrorMessage = string.Join("; ", validationResult.Errors.Select(e => e.ErrorMessage)),
-                    JwtToken = null
-                };
-            }
-
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
-            if (user == null)
-            {
-                return new UserLoginResult
-                {
-                    IsAuthenticated = false,
-                    ErrorMessage = "Credenciais inválidas.",
-                    JwtToken = null
-                };
-            }
-
-            // Verifique a senha (ideal: hash/salt)
-            if (user.PasswordHash != request.Password)
-            {
-                return new UserLoginResult
-                {
-                    IsAuthenticated = false,
-                    ErrorMessage = "Credenciais inválidas.",
-                    JwtToken = null
-                };
-            }
-
-            // Gerar token (exemplo simplificado)
-            var jwtToken = JwtHelper.GenerateJwtToken(user);
-
-            return new UserLoginResult
-            {
-                IsAuthenticated = true,
-                ErrorMessage = null,
-                JwtToken = jwtToken
             };
         }
     }
